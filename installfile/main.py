@@ -15,7 +15,7 @@ from weather import Weather
 import subprocess
 
 
-
+#change this line to modify assistant name
 assistantName = "davido"
 def talkToMe(audio):
     "speaks audio passed as argument"
