@@ -17,7 +17,7 @@ import subprocess
 
 
 #change this line to modify assistant name
-assistantName = "jarvis"
+assistantName = "davido"
 def talkToMe(audio):
     "speaks audio passed as argument"
 
@@ -163,6 +163,6 @@ talkToMe('I am ready for your command')
 #loop to continue executing multiple commands
 while True:
     command = myCommand()
-    if assistantName in command:
+    if assistantName in command or "jarvis" in command: #Just so that I can keep calling him jarvis without needing to update
         command = re.sub(assistantName,'',command)
         assistant(command)
