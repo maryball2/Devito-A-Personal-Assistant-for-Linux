@@ -119,35 +119,6 @@ def assistant(command):
                 talkToMe('On %s will it %s. The maximum temperture will be %.1f degree.'
                          'The lowest temperature will be %.1f degrees.' % (forecasts[i].date(), forecasts[i].text(), (int(forecasts[i].high())-32)/1.8, (int(forecasts[i].low())-32)/1.8))
 
-
-    elif 'email' in command:
-        talkToMe('Who is the recipient?')
-        recipient = myCommand()
-
-        if 'John' in recipient:
-            talkToMe('What should I say?')
-            content = myCommand()
-
-            #init gmail SMTP
-            mail = smtplib.SMTP('smtp.gmail.com', 587)
-
-            #identify to server
-            mail.ehlo()
-
-            #encrypt session
-            mail.starttls()
-
-            #login
-            mail.login('username', 'password')
-
-            #send message
-            mail.sendmail('John Fisher', 'JARVIS2.0@protonmail.com', content)
-
-            #end mail connection
-            mail.close()
-
-            talkToMe('Email sent.')
-
     elif "upgrade packages" in command:
         talkToMe('Upgrading packages, this may require your password')
         upgradeCommand = "pamac upgrade"
