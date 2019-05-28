@@ -1,12 +1,13 @@
 '''
 Title: Devito: A personal assistant
 Author: Riley Carpenter
-TODO: Location Services, More Dynamic Responses, name changes
+TODO: Location Services, More Dynamic Responses, name changes, fix delay with clear screen on exit program
 '''
 
 from gtts import gTTS
 import speech_recognition as sr
 import os
+import sys
 import re
 import webbrowser
 import smtplib
@@ -53,7 +54,7 @@ def myCommand():
     except sr.UnknownValueError:
         print('Your last command couldn\'t be heard')
         command = myCommand();
-
+    os.system("clear")
     return command
 
 
@@ -84,11 +85,15 @@ def assistant(command):
 
     elif "run" in command:
         command = re.sub("run", "", command)
+        command = re.sub(assistantName,"", command)
+        command = re.sub("jarvis","", command)
         command = re.sub("dash", "-", command)
         command = re.sub(" ","", command)
         print("Running " + command + " for you!")
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
+        os.system("clear")
+
     elif 'joke' in command:
         res = requests.get(
                 'https://icanhazdadjoke.com/',
@@ -118,7 +123,11 @@ def assistant(command):
             for i in range(0,3):
                 talkToMe('On %s will it %s. The maximum temperture will be %.1f degree.'
                          'The lowest temperature will be %.1f degrees.' % (forecasts[i].date(), forecasts[i].text(), (int(forecasts[i].high())-32)/1.8, (int(forecasts[i].low())-32)/1.8))
-
+    elif "bye" in command:
+        talkToMe("Goodbye user")
+        time.sleep(1)
+        os.system("clear")
+        sys.exit()
     elif "upgrade packages" in command:
         talkToMe('Upgrading packages, this may require your password')
         upgradeCommand = "pamac upgrade"
@@ -133,6 +142,7 @@ talkToMe('I am ready for your command')
 
 #loop to continue executing multiple commands
 while True:
+    os.system("clear")
     command = myCommand()
     if assistantName in command or "jarvis" in command: #Just so that I can keep calling him jarvis without needing to update
         command = re.sub(assistantName,'',command)
