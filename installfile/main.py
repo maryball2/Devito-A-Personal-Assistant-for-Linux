@@ -11,22 +11,28 @@ import re
 import webbrowser
 import smtplib
 import requests
+import time
 from weather import Weather
 import subprocess
 
 
 #change this line to modify assistant name
-assistantName = "davido"
+assistantName = "jarvis"
 def talkToMe(audio):
     "speaks audio passed as argument"
 
     print(audio)
-    for line in audio.splitlines():
-        os.system("say " + audio)
    # text_to_speech = gTTS(text=audio, lang='en')
    # text_to_speech.save('audio.mp3')
    # os.system('mpg123 audio.mp3')
 
+def getTime():
+    Currenttime = time.ctime()
+    Hours1 = int(Currenttime[11:13])
+    Minutes1 = int(Currenttime[14:16])
+    if Minutes1 < 10:
+        Minutes1 = "0" + str(Minutes1)
+    return str(Hours1) + ":" + str(Minutes1)
 
 def myCommand():
     "listens for commands"
@@ -61,7 +67,8 @@ def assistant(command):
             url = url + 'r/' + subreddit
         webbrowser.open(url)
         print('Done!')
-
+    elif "time" in command:
+        talkToMe("The current time is " + getTime())
     elif 'open website' in command:
         reg_ex = re.search('open website (.+)', command)
         if reg_ex:
@@ -141,8 +148,14 @@ def assistant(command):
 
             talkToMe('Email sent.')
 
-        else:
-            talkToMe('I don\'t know what you mean!')
+    elif "upgrade packages" in command:
+        talkToMe('Upgrading packages, this may require your password')
+        upgradeCommand = "pamac upgrade"
+        process = subprocess.Popen(upgradeCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+            
+    else:
+        talkToMe('I don\'t know what you mean!')
 
 
 talkToMe('I am ready for your command')
