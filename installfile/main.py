@@ -28,6 +28,17 @@ def talkToMe(audio):
    # text_to_speech.save('audio.mp3')
    # os.system('mpg123 audio.mp3')
 
+def findUrl(domain, possibleDomains):
+    for posDomain in possibleDomains:
+        http = httplib2.Http()
+        try:
+            c = http.request("https://www." + domain + posDomain)
+            url = "https://www." + domain + posDomain
+            print(url)
+            return url
+        except:
+            pass
+
 def getTime():
     Currenttime = time.ctime()
     Hours1 = int(Currenttime[11:13])
@@ -82,14 +93,7 @@ def assistant(command):
             url = domain
 
             if url not in possibleDomains:
-                for posDomain in possibleDomains:
-                    http = httplib2.Http()
-                    try:
-                        c = http.request("https://www." + domain + posDomain)
-                        url = "https://www." + domain + posDomain
-                        print(url)
-                    except:
-                        pass
+               url = findUrl(domain, possibleDomains)
 
             else:
                 url = "https://www." + domain
