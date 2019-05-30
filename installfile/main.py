@@ -15,6 +15,7 @@ import requests
 import time
 from weather import Weather
 import subprocess
+import httplib2
 
 
 #change this line to modify assistant name
@@ -54,7 +55,7 @@ def myCommand():
     except sr.UnknownValueError:
         print('Your last command couldn\'t be heard')
         command = myCommand();
-    os.system("clear")
+    #os.system("clear")
     return command
 
 
@@ -70,11 +71,29 @@ def assistant(command):
         print('Done!')
     elif "time" in command:
         talkToMe("The current time is " + getTime())
+
+    #Opens websites in default browser
     elif 'open website' in command:
         reg_ex = re.search('open website (.+)', command)
+        possibleDomains = [".com",".org",".gov"]
         if reg_ex:
             domain = reg_ex.group(1)
-            url = 'https://www.' + domain
+
+            url = domain
+
+            if url not in possibleDomains:
+                for posDomain in possibleDomains:
+                    http = httplib2.Http()
+                    try:
+                        c = http.request("https://www." + domain + posDomain)
+                        url = "https://www." + domain + posDomain
+                        print(url)
+                    except:
+                        pass
+
+            else:
+                url = "https://www." + domain
+
             webbrowser.open(url)
             print('Done!')
         else:
@@ -92,7 +111,7 @@ def assistant(command):
         print("Running " + command + " for you!")
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()
-        os.system("clear")
+        #os.system("clear")
 
     elif 'joke' in command:
         res = requests.get(
@@ -126,7 +145,7 @@ def assistant(command):
     elif "bye" in command:
         talkToMe("Goodbye user")
         time.sleep(1)
-        os.system("clear")
+        #os.system("clear")
         sys.exit()
     elif "upgrade packages" in command:
         talkToMe('Upgrading packages, this may require your password')
@@ -142,7 +161,7 @@ talkToMe('I am ready for your command')
 
 #loop to continue executing multiple commands
 while True:
-    os.system("clear")
+    #os.system("clear")
     command = myCommand()
     if assistantName in command or "jarvis" in command: #Just so that I can keep calling him jarvis without needing to update
         command = re.sub(assistantName,'',command)
